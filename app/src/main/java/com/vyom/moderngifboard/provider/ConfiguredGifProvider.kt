@@ -1,0 +1,2 @@
+package com.vyom.moderngifboard.provider
+class ConfiguredGifProvider:GifProvider { override suspend fun search(query:String,cursor:String?)=GifPage(emptyList()); override suspend fun trending(cursor:String?)=GifPage(emptyList()) }
