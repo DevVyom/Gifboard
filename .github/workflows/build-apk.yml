@@ -1,12 +1,10 @@
 name: Build ModernGifBoard APK
-
 on:
   workflow_dispatch:
   push:
     branches: [ "main", "master", "build/**" ]
   pull_request:
     branches: [ "main" ]
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,12 +14,15 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - uses: android-actions/setup-android@v3
-      - run: sdkmanager "platforms;android-35" "build-tools;35.0.0" "platform-tools"
+      - name: Install Android SDK packages
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platforms;android-35" "build-tools;35.0.0" "platform-tools"
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-      - run: gradle --no-daemon :app:assembleDebug
+      - name: Build debug APK
+        run: gradle --no-daemon :app:assembleDebug
       - uses: actions/upload-artifact@v4
         with:
           name: ModernGifBoard-debug-apk
