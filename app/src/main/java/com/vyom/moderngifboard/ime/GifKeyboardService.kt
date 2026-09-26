@@ -25,7 +25,7 @@ class GifKeyboardService:InputMethodService(){
  private val prefs by lazy{getSharedPreferences("gifboard",MODE_PRIVATE)}
  override fun onDestroy(){scope.cancel();super.onDestroy()}
  override fun onCreateInputView():View{
-  val d=resources.displayMetrics.density;val root=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding((8*d).toInt(),(7*d).toInt(),(8*d).toInt(),(5*d).toInt())}
+  val d=resources.displayMetrics.density;val root=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;minimumHeight=(280*d).toInt();setBackgroundColor(0xFFF7F7F7.toInt());setPadding((8*d).toInt(),(7*d).toInt(),(8*d).toInt(),(5*d).toInt())}
   val searchBox=TextInputLayout(this).apply{hint="Search GIFs";boxBackgroundMode=TextInputLayout.BOX_BACKGROUND_FILLED;setBoxCornerRadii(24*d,24*d,24*d,24*d)}
   val search=TextInputEditText(this).apply{setSingleLine(true);imeOptions=EditorInfo.IME_ACTION_SEARCH};searchBox.addView(search);root.addView(searchBox,LinearLayout.LayoutParams(-1,-2))
   val tabs=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL}
@@ -33,7 +33,7 @@ class GifKeyboardService:InputMethodService(){
   tabs.addView(tab("Trending"){load("trending")},LinearLayout.LayoutParams(0,-2,1f));tabs.addView(tab("Recent"){showStored("recent")},LinearLayout.LayoutParams(0,-2,1f));tabs.addView(tab("Saved"){showStored("saved")},LinearLayout.LayoutParams(0,-2,1f));root.addView(tabs)
   status=TextView(this).apply{gravity=Gravity.CENTER;text="Loading GIFs...";setPadding(4,6,4,6)};root.addView(status);adapter=GifAdapter({commitGif(it)},{toggleSaved(it)})
   val list=RecyclerView(this).apply{layoutManager=GridLayoutManager(this@GifKeyboardService,2);adapter=this@GifKeyboardService.adapter;overScrollMode=View.OVER_SCROLL_NEVER;addOnScrollListener(object:RecyclerView.OnScrollListener(){override fun onScrolled(rv:RecyclerView,dx:Int,dy:Int){val lm=layoutManager as GridLayoutManager;if(!loading&&next!=null&&lm.findLastVisibleItemPosition()>this@GifKeyboardService.adapter.itemCount-5)loadPage(false)}})}
-  root.addView(list,LinearLayout.LayoutParams(-1,0,1f));val bottom=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL}
+  root.addView(list,LinearLayout.LayoutParams(-1,(220*d).toInt()));val bottom=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL}
   bottom.addView(tab("ABC"){switchBack()},LinearLayout.LayoutParams(0,-2,1f));bottom.addView(TextView(this).apply{text="GIF";gravity=Gravity.CENTER;textSize=14f},LinearLayout.LayoutParams(0,-1,1f));bottom.addView(tab("Keyboard"){(getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).showInputMethodPicker()},LinearLayout.LayoutParams(0,-2,1f));root.addView(bottom)
   search.setOnEditorActionListener{_,_,_->val q=search.text?.toString()?.trim().orEmpty();if(q.isNotEmpty())load(q);true};root.post{load("trending")};return root
  }
