@@ -27,7 +27,7 @@ class GifKeyboardService:InputMethodService(){
  override fun onCreateInputView():View{
   val d=resources.displayMetrics.density;val root=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding((8*d).toInt(),(7*d).toInt(),(8*d).toInt(),(5*d).toInt())}
   val searchBox=TextInputLayout(this).apply{hint="Search GIFs";boxBackgroundMode=TextInputLayout.BOX_BACKGROUND_FILLED;setBoxCornerRadii(24*d,24*d,24*d,24*d)}
-  val search=TextInputEditText(this).apply{singleLine=true;imeOptions=EditorInfo.IME_ACTION_SEARCH};searchBox.addView(search);root.addView(searchBox,LinearLayout.LayoutParams(-1,-2))
+  val search=TextInputEditText(this).apply{setSingleLine(true);imeOptions=EditorInfo.IME_ACTION_SEARCH};searchBox.addView(search);root.addView(searchBox,LinearLayout.LayoutParams(-1,-2))
   val tabs=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL}
   fun tab(label:String,action:()->Unit)=MaterialButton(this).apply{text=label;isAllCaps=false;insetTop=0;insetBottom=0;setOnClickListener{action()}}
   tabs.addView(tab("Trending"){load("trending")},LinearLayout.LayoutParams(0,-2,1f));tabs.addView(tab("Recent"){showStored("recent")},LinearLayout.LayoutParams(0,-2,1f));tabs.addView(tab("Saved"){showStored("saved")},LinearLayout.LayoutParams(0,-2,1f));root.addView(tabs)
